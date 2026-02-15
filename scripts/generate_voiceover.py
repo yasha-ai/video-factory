@@ -107,16 +107,18 @@ def generate_timing_markers(scenes: List[Scene]) -> List[Dict]:
         scenes: List of Scene objects
     
     Returns:
-        List of timing markers with start, end, text
+        List of timing markers with start, end, text, scene_id
     """
     markers = []
     current_time = 0.0
     
     for scene in scenes:
         markers.append({
+            "scene_id": scene.id,
             "start": current_time,
             "end": current_time + scene.duration,
-            "text": scene.text
+            "text": scene.text,
+            "duration": scene.duration
         })
         current_time += scene.duration
     

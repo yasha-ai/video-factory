@@ -12,6 +12,12 @@ import sys
 from pathlib import Path
 from datetime import datetime
 import json
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from project root
+project_root = Path(__file__).parent.parent
+load_dotenv(project_root / ".env.local")
 
 # Import our modules
 from process_script import process_script, save_scenes
@@ -99,10 +105,7 @@ def main():
         print("=" * 80)
         
         scenes_dir = output_dir / "scenes"
-        success = generate_visuals(scenes, str(scenes_dir), delay=2.0)
-        
-        if not success:
-            print("⚠️  Some images failed to generate (using placeholders)")
+        generate_visuals(scenes, str(output_dir))
         
         # Step 3: Generate voiceover
         print("\n" + "=" * 80)
@@ -110,20 +113,24 @@ def main():
         print("=" * 80)
         
         audio_dir = output_dir / "audio"
+        audio_dir.mkdir(parents=True, exist_ok=True)
+        voiceover_file = audio_dir / "voiceover.wav"
+        
         voiceover_result = generate_voiceover(
             scenes=scenes,
-            output_dir=str(audio_dir),
+            output_path=str(voiceover_file),
             voice=args.voice,
-            lang=args.lang,
-            combine=True
+            lang=args.lang
         )
         
-        voiceover_file = audio_dir / "voiceover.wav"
+        # Save timing data to JSON
         timing_file = audio_dir / "timing.json"
+        with open(timing_file, 'w', encoding='utf-8') as f:
+            json.dump(voiceover_result['timing_data'], f, indent=2, ensure_ascii=False)
         
         print(f"\n✅ Voiceover complete!")
         print(f"   Audio: {voiceover_file}")
-        print(f"   Duration: {voiceover_result['total_duration']:.1f}s")
+        print(f"   Duration: {voiceover_result['duration']:.1f}s")
         
         # Step 4: Assemble final video
         print("\n" + "=" * 80)
@@ -160,7 +167,7 @@ def main():
         # Print summary
         print("\n📊 Summary:")
         print(f"   Scenes: {len(scenes)}")
-        print(f"   Duration: {voiceover_result['total_duration']:.1f}s")
+        print(f"   Duration: {voiceover_result['duration']:.1f}s")
         print(f"   Resolution: 1920x1080")
         print(f"   FPS: 30")
         print(f"   Audio: {args.voice} ({args.lang})")

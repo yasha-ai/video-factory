@@ -10,7 +10,8 @@ import json
 from dataclasses import dataclass, asdict
 from typing import List
 from dotenv import load_dotenv
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 # Load environment variables
 load_dotenv()
@@ -41,8 +42,7 @@ def process_script(text: str, style: str = "default") -> List[Scene]:
     if not api_key:
         raise ValueError("GOOGLE_GEMINI_API_KEY not found in environment")
     
-    genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-2.5-flash-latest')
+    client = genai.Client(api_key=api_key)
     
     # System prompt for scene generation
     system_prompt = f"""You are a video script processor. Your task is to:
@@ -88,12 +88,13 @@ Generate scenes with narration and visual prompts. Return ONLY valid JSON array,
         # Call Gemini API
         full_prompt = f"{system_prompt}\n\n{user_prompt}"
         
-        response = model.generate_content(
-            full_prompt,
-            generation_config={
-                "temperature": 0.7,
-                "max_output_tokens": 4000,
-            }
+        response = client.models.generate_content(
+            model="models/gemini-2.5-flash",
+            contents=full_prompt,
+            config=types.GenerateContentConfig(
+                temperature=0.7,
+                max_output_tokens=4000,
+            )
         )
         
         # Extract response text
