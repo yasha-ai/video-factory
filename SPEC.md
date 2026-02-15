@@ -50,17 +50,25 @@
 
 ---
 
-## Tech Stack (Proposed)
+## Tech Stack
 
-### Video Processing
-- **FFmpeg** — video assembly, encoding, effects
-- **Remotion** (optional) — programmatic video creation with React
-- **MoviePy** (Python alternative)
+### Core
+- **Python 3.11+** — Main language
+- **FFmpeg** — Video assembly, encoding, effects
+- **MoviePy** — Python video editing library
 
 ### AI Services
-- **Visuals:** Gemini 3 Pro Image, Stable Diffusion XL, Midjourney API
+- **Visuals:** Gemini 3 Pro Image, Stable Diffusion XL
 - **TTS:** Gemini TTS (Russian), Deepgram Aura (English)
 - **Script enhancement:** Claude Opus 4.6 / GPT-5.3
+
+### Python Libraries
+- **google-generativeai** — Gemini API client
+- **openai** — GPT API client
+- **ffmpeg-python** — FFmpeg wrapper
+- **moviepy** — Video editing
+- **pydub** — Audio processing
+- **Pillow** — Image manipulation
 
 ### Storage & Assets
 - **Local:** `~/clawd/video-factory/output/`
@@ -75,17 +83,17 @@
 video-factory/
 ├── SPEC.md                    # This file
 ├── README.md                  # User-facing docs
-├── package.json               # Dependencies
+├── requirements.txt           # Python dependencies
 ├── scripts/
-│   ├── generate-video.ts      # Main CLI entry point
-│   ├── process-script.ts      # Script → scenes
-│   ├── generate-visuals.ts    # Scenes → images
-│   ├── generate-voiceover.ts  # Script → audio
-│   ├── generate-subtitles.ts  # Script → .srt
-│   └── assemble-video.ts      # Combine all → MP4
+│   ├── generate_video.py      # Main CLI entry point
+│   ├── process_script.py      # Script → scenes
+│   ├── generate_visuals.py    # Scenes → images
+│   ├── generate_voiceover.py  # Script → audio
+│   ├── generate_subtitles.py  # Script → .srt
+│   └── assemble_video.py      # Combine all → MP4
 ├── templates/
 │   ├── default.json           # Default video template
-│   └── tech-news.json         # Tech news style
+│   └── tech_news.json         # Tech news style
 ├── assets/
 │   ├── fonts/                 # Subtitle fonts
 │   ├── music/                 # Background music tracks
@@ -106,19 +114,19 @@ video-factory/
 
 ```bash
 # Basic generation
-npm run generate -- --prompt "Create a 2-minute video about Claude Opus 4.6 release"
+python scripts/generate_video.py --prompt "Create a 2-minute video about Claude Opus 4.6 release"
 
 # With custom script file
-npm run generate -- --script ./scripts/claude-opus-4.6.txt --voice fenrir --lang ru
+python scripts/generate_video.py --script ./scripts/claude-opus-4.6.txt --voice fenrir --lang ru
 
 # Advanced options
-npm run generate -- \
+python scripts/generate_video.py \
   --script ./my-script.txt \
   --voice fenrir \
   --lang ru \
   --style tech-news \
   --music ambient \
-  --subtitles on \
+  --subtitles \
   --output ./my-video.mp4
 ```
 
@@ -212,10 +220,11 @@ VIDEO_QUALITY=high                   # low | medium | high
 - [ ] Video hosting strategy?
 
 ### Decisions Made
-- ✅ TypeScript for scripting (consistency with other projects)
+- ✅ **Python** for scripting (better video/AI library ecosystem)
 - ✅ Gemini for visuals + TTS (already integrated)
 - ✅ CLI-first approach (automation-friendly)
 - ✅ Local-first storage (cloud later)
+- ✅ MoviePy for video editing (simpler than pure FFmpeg)
 
 ---
 

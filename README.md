@@ -24,10 +24,10 @@ git clone https://github.com/yasha-ai/video-factory.git
 cd video-factory
 
 # Install dependencies
-npm install
+pip install -r requirements.txt
 
 # Generate your first video
-npm run generate -- --prompt "Create a 2-minute video about AI breakthroughs in 2026"
+python scripts/generate_video.py --prompt "Create a 2-minute video about AI breakthroughs in 2026"
 ```
 
 ---
@@ -36,23 +36,23 @@ npm run generate -- --prompt "Create a 2-minute video about AI breakthroughs in 
 
 ### Basic Generation
 ```bash
-npm run generate -- --prompt "Your video topic here"
+python scripts/generate_video.py --prompt "Your video topic here"
 ```
 
 ### Custom Script
 ```bash
-npm run generate -- --script ./my-script.txt --voice fenrir --lang ru
+python scripts/generate_video.py --script ./my-script.txt --voice fenrir --lang ru
 ```
 
 ### Advanced Options
 ```bash
-npm run generate -- \
+python scripts/generate_video.py \
   --script ./script.txt \
   --voice fenrir \
   --lang ru \
   --style tech-news \
   --music ambient \
-  --subtitles on \
+  --subtitles \
   --output ./my-video.mp4
 ```
 
@@ -91,10 +91,10 @@ VIDEO_QUALITY=high
 
 ## Tech Stack
 
-- **TypeScript** — Scripting & orchestration
-- **FFmpeg** — Video processing & encoding
+- **Python 3.11+** — Scripting & orchestration
+- **FFmpeg + MoviePy** — Video processing & encoding
 - **Gemini API** — AI visuals & TTS
-- **Remotion** (optional) — Programmatic video creation
+- **Deepgram** — Alternative TTS for English
 
 ---
 
